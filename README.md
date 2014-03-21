@@ -1,5 +1,7 @@
 # clever-buffer
 
+[![Build Status](https://travis-ci.org/TabDigital/clever-buffer.svg?branch=master)](https://travis-ci.org/TabDigital/clever-buffer)
+
 Buffer write and read utilities. 
 
 CleverBuffer adds functionality that is missing from the node Buffer class
