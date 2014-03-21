@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/TabDigital/clever-buffer.svg?branch=master)](https://travis-ci.org/TabDigital/clever-buffer)
 
-[![NPM](https://nodei.co/npm/clever-buffer.png)](https://nodei.co/npm/clever-buffer/)
+[![NPM](https://nodei.co/npm/clever-buffer.svg)](https://nodei.co/npm/clever-buffer/)
 
 Buffer write and read utilities. 
 
