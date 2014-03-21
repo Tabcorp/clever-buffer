@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/TabDigital/clever-buffer.svg?branch=master)](https://travis-ci.org/TabDigital/clever-buffer)
 
+[![NPM](https://nodei.co/npm/clever-buffer.png)](https://nodei.co/npm/clever-buffer/)
+
 Buffer write and read utilities. 
 
 CleverBuffer adds functionality that is missing from the node Buffer class
@@ -9,6 +11,11 @@ CleverBuffer adds functionality that is missing from the node Buffer class
 * Keeps track of the offset for you
 * One time specification of endian-ness and whether to assert on buffer length
 * 64 bit integer support. We use [ref](https://github.com/TooTallNate/ref) under the hood for our 64 bit numbers
+
+## Installation
+``` coffee
+npm install clever-buffer
+```
 
 _NOTE_: Examples below in coffeescript 
 
