@@ -1,0 +1,27 @@
+{
+  "name": "clever-buffer",
+  "version": "1.0.0",
+  "description": "Buffer utilities",
+  "author": "Tabcorp Digital Technology Team",
+  "license": "Copyright Tabcorp Pty Ltd 2014",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TabDigital/clever-buffer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TabDigital/clever-buffer/issues"
+  },
+  "main": "src/clever-buffer.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  },
+  "devDependencies": {
+    "should": "~2.1.1",
+    "mocha": "~1.15.1"
+  },
+  "dependencies": {
+    "coffee-script": "~1.7.1",
+    "lodash": "~2.4.1",
+    "ref": "~0.1.3"
+  }
+}
