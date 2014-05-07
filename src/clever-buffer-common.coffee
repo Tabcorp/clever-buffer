@@ -34,4 +34,8 @@ class CleverBuffer
   trim: =>
     @buffer.slice 0, @offset
 
+  slice: (start, end) =>
+    realEnd = if end then @offset + end else @buffer.length
+    @buffer.slice @offset + (start or 0), realEnd
+
 module.exports = CleverBuffer
