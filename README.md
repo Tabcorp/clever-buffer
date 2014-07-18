@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/TabDigital/clever-buffer.svg?branch=master)](https://travis-ci.org/TabDigital/clever-buffer)
 
+[![Dependency Status](https://david-dm.org/TabDigital/clever-buffer.png?theme=shields.io)](https://david-dm.org/TabDigital/clever-buffer) 
+[![devDependency Status](https://david-dm.org/TabDigital/clever-buffer/dev-status.png?theme=shields.io)](https://david-dm.org/TabDigital/clever-buffer#info=devDependencies)
+
 [![NPM](https://nodei.co/npm/clever-buffer.svg)](https://nodei.co/npm/clever-buffer/)
 
 Buffer write and read utilities. 
