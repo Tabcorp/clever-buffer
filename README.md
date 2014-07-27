@@ -1,11 +1,12 @@
 # clever-buffer
 
-[![Build Status](https://travis-ci.org/TabDigital/clever-buffer.svg?branch=master)](https://travis-ci.org/TabDigital/clever-buffer)
 
-[![Dependency Status](https://david-dm.org/TabDigital/clever-buffer.png?theme=shields.io)](https://david-dm.org/TabDigital/clever-buffer) 
-[![devDependency Status](https://david-dm.org/TabDigital/clever-buffer/dev-status.png?theme=shields.io)](https://david-dm.org/TabDigital/clever-buffer#info=devDependencies)
+[![NPM](http://img.shields.io/npm/v/clever-buffer.svg?style=flat)](https://npmjs.org/package/clever-buffer)
+[![License](http://img.shields.io/npm/l/clever-buffer.svg?style=flat)](https://github.com/TabDigital/clever-buffer)
 
-[![NPM](https://nodei.co/npm/clever-buffer.svg)](https://nodei.co/npm/clever-buffer/)
+[![Build Status](http://img.shields.io/travis/TabDigital/clever-buffer.svg?style=flat)](http://travis-ci.org/TabDigital/clever-buffer)
+[![Dependencies](http://img.shields.io/david/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
+[![Dev dependencies](http://img.shields.io/david/dev/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
 
 Buffer write and read utilities. 
 
