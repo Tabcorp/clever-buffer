@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "description": "Buffer utilities",
   "author": "Tabcorp Digital Technology Team",
-  "license": "Copyright Tabcorp Pty Ltd 2014",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TabDigital/clever-buffer.git"
