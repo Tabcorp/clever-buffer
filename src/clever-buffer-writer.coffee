@@ -62,22 +62,19 @@ class CleverBufferWriter extends CleverBuffer
     @offset += 8 if _offset is undefined
 
   writeString: (value, options={}) ->
-    { length, offset, encoding, offsetSpecified } = _.defaults options,
+    offsetSpecified = options.offset?
+    { length, offset, encoding } = _.defaults options,
       length: value.length
       offset: @offset
-      offsetSpecified: options.offset?
       encoding: 'utf-8'
     return if length is 0
     @buffer.write value, offset, length, encoding
     @offset += length if not offsetSpecified
 
   write: (value, options = {}) ->
-    { length, offset, offsetSpecified } = _.defaults options,
-      length: value.length
-      offset: @offset
-      offsetSpecified: options.offset?
-    return if length is 0
-    new Buffer(value).copy(@buffer, @offset)
-    @offset += length unless offsetSpecified
+    offsetSpecified = options.offset?
+    offset = options.offset or @offset
+    new Buffer(value).copy(@buffer, offset)
+    @offset += value.length unless offsetSpecified
 
 module.exports = CleverBufferWriter
