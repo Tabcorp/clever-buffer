@@ -73,4 +73,6 @@ class CleverBufferReader extends CleverBuffer
     @offset += length if not offsetSpecified
     val
 
+  get: -> @getBuffer()
+
 module.exports = CleverBufferReader

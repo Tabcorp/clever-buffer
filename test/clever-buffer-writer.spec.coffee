@@ -1,6 +1,6 @@
 should                  = require 'should'
 CleverBufferWriter       = require "#{SRC}/clever-buffer-writer"
-{ writeToBuffer,
+{ writeToStupidBuffer,
   writeToCleverBuffer }  = require './support/test-helper'
 
 describe 'CleverBuffer', ->
@@ -10,7 +10,7 @@ describe 'CleverBuffer', ->
   it 'should write Uint8', ->
     numberOfBytesPerWord = 1
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeUInt8 value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -21,7 +21,7 @@ describe 'CleverBuffer', ->
   it 'should write int8', ->
     numberOfBytesPerWord = 1
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeInt8 value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -32,7 +32,7 @@ describe 'CleverBuffer', ->
   it 'should write Uint16 Little Endian', ->
     numberOfBytesPerWord = 2
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeUInt16LE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -43,7 +43,7 @@ describe 'CleverBuffer', ->
   it 'should write int16 Little Endian', ->
     numberOfBytesPerWord = 2
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeInt16LE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -54,7 +54,7 @@ describe 'CleverBuffer', ->
   it 'should write Uint16 Big Endian', ->
     numberOfBytesPerWord = 2
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeUInt16BE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, true, (cleverBufferWriter, value) ->
@@ -65,7 +65,7 @@ describe 'CleverBuffer', ->
   it 'should write int16 Big Endian', ->
     numberOfBytesPerWord = 2
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeInt16BE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, true, (cleverBufferWriter, value) ->
@@ -76,7 +76,7 @@ describe 'CleverBuffer', ->
   it 'should write Uint32 Little Endian', ->
     numberOfBytesPerWord = 4
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeUInt32LE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -87,7 +87,7 @@ describe 'CleverBuffer', ->
   it 'should write int32 Little Endian', ->
     numberOfBytesPerWord = 4
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeInt32LE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, false, (cleverBufferWriter, value) ->
@@ -98,7 +98,7 @@ describe 'CleverBuffer', ->
   it 'should write Uint32 Big Endian', ->
     numberOfBytesPerWord = 4
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeUInt32BE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, true, (cleverBufferWriter, value) ->
@@ -109,13 +109,23 @@ describe 'CleverBuffer', ->
   it 'should write int32 Big Endian', ->
     numberOfBytesPerWord = 4
 
-    buf = writeToBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
+    buf = writeToStupidBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, (buf, value, offset) ->
       buf.writeInt32BE value, offset, true
 
     cleverBuffer = writeToCleverBuffer NUMBER_OF_ITERATIONS, numberOfBytesPerWord, true, (cleverBufferWriter, value) ->
       cleverBufferWriter.writeInt32 value
 
     buf.should.eql cleverBuffer
+
+  it 'should write bytes', ->
+    buf = new Buffer 11
+    buf.fill 0
+    cleverBufferWriter = new CleverBufferWriter buf
+    cleverBufferWriter.write [0x20, 0x6d, 0x65, 0x20, 0x57, 0x6f, 0x72, 0x72, 0x79, 0x21]
+    cleverBufferWriter.write [0x20]
+    cleverBufferWriter.write [0x57, 0x68, 0x61, 0x74], {offset: 2}
+
+    cleverBufferWriter.getBuffer().should.eql new Buffer [0x20, 0x6d, 0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20]
 
   it 'should skip bytes', ->
     buf = new Buffer 4

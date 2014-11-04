@@ -1,6 +1,6 @@
 CleverBufferWriter       = require "#{SRC}/clever-buffer-writer"
 
-exports.writeToBuffer = (numberOfIterations, numberOfBytesPerWord, writeFunction) ->
+exports.writeToStupidBuffer = (numberOfIterations, numberOfBytesPerWord, writeFunction) ->
     buf = new Buffer (numberOfIterations*numberOfBytesPerWord)
 
     for i in [0..numberOfIterations-1]
