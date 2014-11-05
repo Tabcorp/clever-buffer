@@ -71,7 +71,7 @@ class CleverBufferWriter extends CleverBuffer
     @buffer.write value, offset, length, encoding
     @offset += length if not offsetSpecified
 
-  write: (value, options = {}) ->
+  writeBytes: (value, options = {}) ->
     offsetSpecified = options.offset?
     offset = options.offset or @offset
     new Buffer(value).copy(@buffer, offset)

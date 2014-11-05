@@ -63,16 +63,24 @@ class CleverBufferReader extends CleverBuffer
     val.toString()
 
   getString: (options={}) =>
-    { length, offset, encoding, offsetSpecified } = _.defaults options,
+    offsetSpecified = options.offset?
+    { length, offset, encoding } = _.defaults options,
       length: 0
       offset: @offset
-      offsetSpecified: options.offset?
       encoding: 'utf-8'
     return '' if length is 0
     val = @buffer.toString encoding, offset, offset + length
     @offset += length if not offsetSpecified
     val
 
-  get: -> @getBuffer()
+  getBytes: (options={}) =>
+    offsetSpecified = options.offset?
+    { length, offset } = _.defaults options,
+      length: 0
+      offset: @offset
+    return [] if length is 0
+    val = Array.prototype.slice.call(@buffer, offset, offset + length)
+    @offset += length if not offsetSpecified
+    val
 
 module.exports = CleverBufferReader

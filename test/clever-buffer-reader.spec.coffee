@@ -82,12 +82,6 @@ describe 'CleverBufferReader', ->
     cleverBuffer = new CleverBufferReader new Buffer ([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]), { bigEndian:true }
     cleverBuffer.getInt64().should.eql '-1'
 
-  it 'should get bytes', ->
-    value = [0x57, 0x68, 0x61, 0x74, 0x21]
-    cleverBuffer = new CleverBufferReader new Buffer (value)
-    buffer = cleverBuffer.get()
-    cleverBuffer.get().should.eql new Buffer([0x57, 0x68, 0x61, 0x74, 0x21])
-
   it 'should get String', ->
     cleverBuffer = new CleverBufferReader buf
     cleverBuffer.getString(length:16).should.eql 'EXPECTED RETURN!'
@@ -148,3 +142,11 @@ describe 'CleverBufferReader', ->
 
     cleverBuffer.getOffset().should.eql 0 #should not increment currentOffset
 
+  it 'should get bytes', ->
+    cleverBuffer = new CleverBufferReader new Buffer [
+      0x20, 0x6d, 0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20
+    ]
+    cleverBuffer.getBytes(offset: 2, length: 9).should.eql [0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20]
+    cleverBuffer.getBytes(length: 4).should.eql [0x20, 0x6d, 0x57, 0x68]
+    cleverBuffer.getBytes(length: 1).should.eql [0x61]
+    
