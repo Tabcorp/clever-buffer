@@ -27,6 +27,7 @@ class CleverBuffer
 
   skip: (bytesToSkip) =>
     @offset += bytesToSkip
+    return
 
   skipTo: (offset) =>
     @offset = offset
