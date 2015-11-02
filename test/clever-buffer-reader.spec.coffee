@@ -105,7 +105,8 @@ describe 'CleverBufferReader', ->
 
   it 'should skip bytes', ->
     cleverBuffer = new CleverBufferReader buf
-    cleverBuffer.skip 4
+    returnVal = cleverBuffer.skip 4
+    (typeof returnVal).should.eql('undefined') # Skipping shouldn't return a value
     cleverBuffer.getOffset().should.eql 4
 
   it 'should skip to set offset', ->
