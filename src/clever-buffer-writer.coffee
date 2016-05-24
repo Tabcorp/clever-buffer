@@ -1,6 +1,6 @@
-_               = require 'lodash'
 ref             = require 'ref'
-CleverBuffer     = require './clever-buffer-common'
+defaults        = require './defaults'
+CleverBuffer    = require './clever-buffer-common'
 
 
 UINT32MAX_PLUS_ONE    = 4294967296
@@ -63,7 +63,7 @@ class CleverBufferWriter extends CleverBuffer
 
   writeString: (value, options={}) ->
     offsetSpecified = options.offset?
-    { length, offset, encoding } = _.defaults options,
+    { length, offset, encoding } = defaults options,
       length: value.length
       offset: @offset
       encoding: 'utf-8'

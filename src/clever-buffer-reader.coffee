@@ -1,6 +1,6 @@
-_               = require 'lodash'
 ref             = require 'ref'
-CleverBuffer     = require './clever-buffer-common'
+defaults        = require './defaults'
+CleverBuffer    = require './clever-buffer-common'
 
 UINT32MAX_PLUS_ONE    = 4294967296
 
@@ -64,7 +64,7 @@ class CleverBufferReader extends CleverBuffer
 
   getString: (options={}) =>
     offsetSpecified = options.offset?
-    { length, offset, encoding } = _.defaults options,
+    { length, offset, encoding } = defaults options,
       length: 0
       offset: @offset
       encoding: 'utf-8'
@@ -75,7 +75,7 @@ class CleverBufferReader extends CleverBuffer
 
   getBytes: (options={}) =>
     offsetSpecified = options.offset?
-    { length, offset } = _.defaults options,
+    { length, offset } = defaults options,
       length: 0
       offset: @offset
     return [] if length is 0

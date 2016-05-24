@@ -1,4 +1,4 @@
-_ = require 'lodash'
+defaults = require './defaults'
 
 class CleverBuffer
 
@@ -6,7 +6,7 @@ class CleverBuffer
 
     @buffer = buffer
 
-    { @offset, @noAssert, @bigEndian } = _.defaults options,
+    { @offset, @noAssert, @bigEndian } = defaults options,
       offset: 0
       noAssert: true
       bigEndian: false
