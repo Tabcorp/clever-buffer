@@ -150,4 +150,15 @@ describe 'CleverBufferReader', ->
     cleverBuffer.getBytes(offset: 2, length: 9).should.eql [0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20]
     cleverBuffer.getBytes(length: 4).should.eql [0x20, 0x6d, 0x57, 0x68]
     cleverBuffer.getBytes(length: 1).should.eql [0x61]
-    
+
+  it 'should return <undefined> when reading past the length', ->
+    buf = new Buffer [0x1]
+    cleverBuffer = new CleverBufferReader buf
+    should.equal(cleverBuffer.getUInt8(), 1)
+    should.equal(typeof cleverBuffer.getUInt8(), 'undefined')
+
+  it 'throws an exception when reading past the length with noAssert off', ->
+    buf = new Buffer [0x1]
+    cleverBuffer = new CleverBufferReader buf, {noAssert: false}
+    should.equal(cleverBuffer.getUInt8(), 1)
+    (-> cleverBuffer.getUInt8()).should.throw()
