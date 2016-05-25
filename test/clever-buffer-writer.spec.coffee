@@ -295,3 +295,16 @@ describe 'CleverBuffer', ->
       0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00
     ]
     cleverBuffer.getOffset().should.eql 9
+
+  it 'does nothing silently when writing past the length', ->
+    buf = new Buffer [0x0]
+    cleverBuffer = new CleverBufferWriter buf
+    cleverBuffer.writeUInt8(1)
+    cleverBuffer.writeUInt8(1)
+    buf.should.eql new Buffer [0x1]
+
+  it 'throws an exception when writing past the length with noAssert off', ->
+    buf = new Buffer [0x1]
+    cleverBuffer = new CleverBufferWriter buf, {noAssert: false}
+    cleverBuffer.writeUInt8(1)
+    (-> cleverBuffer.writeUInt8(1)).should.throw()
