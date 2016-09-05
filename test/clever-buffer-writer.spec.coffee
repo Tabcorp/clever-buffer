@@ -151,39 +151,81 @@ describe 'CleverBuffer', ->
     buf = new Buffer 32
     buf.fill 0
     cleverBufferWriter = new CleverBufferWriter buf
-    cleverBufferWriter.writeString 'EXPECTED RETURN!'
-    cleverBufferWriter.writeString 'RETURN OF $2.00!'
-
+    len = cleverBufferWriter.writeString 'EXPECTED RETURN!'
+    len += cleverBufferWriter.writeString 'RETURN OF $2.00!'
+    len.should.eql 32
+    cleverBufferWriter.getOffset().should.eql 32
     cleverBufferWriter.getBuffer().should.eql new Buffer [
       0x45,0x58,0x50,0x45,0x43,0x54,0x45,0x44,0x20,0x52,0x45,0x54,0x55,0x52,0x4e,0x21,
       0x52,0x45,0x54,0x55,0x52,0x4e,0x20,0x4f,0x46,0x20,0x24,0x32,0x2e,0x30,0x30,0x21
     ]
 
-  it 'should write string of specified length', ->
+  it 'should write string in multi-byte encodings', ->
     buf = new Buffer 10
     buf.fill 0
     cleverBufferWriter = new CleverBufferWriter buf
-    cleverBufferWriter.writeString 'HELLOWORLD', length:5
+    len = cleverBufferWriter.writeString 'héllo', {encoding: 'utf-8'}
+    len.should.eql 6
+    cleverBufferWriter.getOffset().should.eql 6
+    cleverBufferWriter.getBuffer().should.eql new Buffer [
+      0x68, 0xc3, 0xa9, 0x6c, 0x6c, 0x6f, 0x00, 0x00, 0x00, 0x00
+    ]
 
+  # because of buffer.write(value, offset, length, encoding)
+  it 'takes the encoding param into account, even if length is not specified', ->
+    buf = new Buffer 10
+    buf.fill 0
+    cleverBufferWriter = new CleverBufferWriter buf
+    len = cleverBufferWriter.writeString 'héllo', {encoding: 'utf16le'}
+    len.should.eql 10
+
+  it 'should write partial strings using length (number of bytes)', ->
+    buf = new Buffer 10
+    buf.fill 0
+    cleverBufferWriter = new CleverBufferWriter buf
+    len = cleverBufferWriter.writeString 'HELLOWORLD', {length: 5}
     #Only writes hello
+    len.should.eql 5
+    cleverBufferWriter.getOffset().should.eql 5
     cleverBufferWriter.getBuffer().should.eql new Buffer [
       0x48, 0x45, 0x4C, 0x4C, 0x4F, 0x00, 0x00, 0x00, 0x00, 0x00
     ]
-    cleverBufferWriter.getOffset().should.eql 5
 
-  it 'should write string of specified length at a specified offset', ->
+  it 'should write partial multi-byte strings using length (number of bytes)', ->
     buf = new Buffer 10
     buf.fill 0
     cleverBufferWriter = new CleverBufferWriter buf
-    cleverBufferWriter.writeString 'HELLOWORLD',
-      length:5
-      offset: 5
+    len = cleverBufferWriter.writeString 'héllo', {length: 4}
+    # Only writes hél
+    len.should.eql 4
+    cleverBufferWriter.getOffset().should.eql 4
+    cleverBufferWriter.getBuffer().should.eql new Buffer [
+      0x68, 0xc3, 0xa9, 0x6c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    ]
+
+  it 'does not write partially encoded characters', ->
+    buf = new Buffer 10
+    buf.fill 0
+    cleverBufferWriter = new CleverBufferWriter buf
+    len = cleverBufferWriter.writeString 'éè', {length: 3}
+    # Only writes é
+    len.should.eql 2
+    cleverBufferWriter.getOffset().should.eql 2
+    cleverBufferWriter.getBuffer().should.eql new Buffer [
+      0xc3, 0xa9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+    ]
+
+  it 'should write string at a specified offset', ->
+    buf = new Buffer 10
+    buf.fill 0
+    cleverBufferWriter = new CleverBufferWriter buf
+    cleverBufferWriter.writeString 'HELLO', {offset: 5}
 
     #Writes hello starting at offset 5
+    cleverBufferWriter.getOffset().should.eql 0
     cleverBufferWriter.getBuffer().should.eql new Buffer [
       0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x45, 0x4C, 0x4C, 0x4F
     ]
-    cleverBufferWriter.getOffset().should.eql 0
 
   it 'should be able to writeUInt8 at a specific offset', ->
     buf = new Buffer 5

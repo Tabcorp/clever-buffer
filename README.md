@@ -8,7 +8,7 @@
 [![Dependencies](http://img.shields.io/david/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
 [![Dev dependencies](http://img.shields.io/david/dev/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
 
-Buffer write and read utilities. 
+Buffer write and read utilities.
 
 CleverBuffer adds functionality that is missing from the node Buffer class
 
@@ -21,7 +21,7 @@ CleverBuffer adds functionality that is missing from the node Buffer class
 npm install clever-buffer
 ```
 
-_NOTE_: Examples below in coffeescript 
+_NOTE_: Examples below in coffeescript
 
 ## Reader Usage
 
@@ -36,7 +36,7 @@ _NOTE_: Examples below in coffeescript
   * offset Number, Optional, Default: 0
   * noAssert Boolean, Optional, Default: true
   * bigEndian Boolean, Optional, Default: false
-  
+
 Allocates a new CleverBufferReader with an internal buffer of the specified existingBuffer
 ``` coffee
 reader = new CleverBufferReader existingBuffer, {offset:0, noAssert: true, bigEndian: false}
@@ -69,7 +69,7 @@ console.log reader.getInt8() # 2
 #### reader.getUInt16([offset])
 * offset Number, Optional, Default: current buffer position
 
-Returns an Unsigned 16bit Integer from the current offset. 
+Returns an Unsigned 16bit Integer from the current offset.
 
 ``` coffee
 buf = new Buffer [0xFF, 0xFF, 0x02, 0x00]
@@ -93,7 +93,7 @@ console.log reader.getInt16() # 2
 #### reader.getUInt32([offset])
 * offset Number, Optional, Default: current buffer position
 
-Returns an Unsigned 32bit Integer from the current offset. 
+Returns an Unsigned 32bit Integer from the current offset.
 
 ``` coffee
 buf = new Buffer [0xFF, 0xFF, 0xFF, 0xFF]
@@ -117,7 +117,7 @@ console.log reader.getInt32() # -1
 
 Returns an Unsigned 64bit Integer from the current offset.
 
-The value will be returned as a string 
+The value will be returned as a string
 
 
 ``` coffee
@@ -167,7 +167,7 @@ console.log reader.getString(length:5) # "HELLO"
   * offset Number, Optional, Default: 0
   * noAssert Boolean, Optional, Default: true
   * bigEndian Boolean, Optional, Default: false
-  
+
 Allocates a new CleverBufferWriter with an internal buffer of the specified existingBuffer
 ``` coffee
 writer = new CleverBufferWriter existingBuffer, {offset:0, noAssert: true, bigEndian: false}
@@ -256,17 +256,18 @@ console.log buf # [0xFF, 0xFF, 0xFF, 0xFF]
 #### writer.writeString(value, [options])
 * value String
 * options Optional
-  * length Number, Optional, Default: value.length
+  * length Number, Optional, number of bytes to write. Note this can be greater than `value.length` for non ASCII encodings. If not specified, will default to the right number of bytes for the chosen encoding.
   * offset Number, Optional, Default: current offset. If an offset is specified the current offset will not be incremented
   * encoding String, Optional, Default: 'utf-8'
+* returns the number of bytes written
 
 Writes string to the buffer
 
 ``` coffee
-buf =  new Buffer 5
+buf =  new Buffer 8
 writer = new CleverBufferWriter buf
-writer.writeString "HELLO"
-console.log buf # [0x48, 0x45, 0x4C, 0x4C, 0x4F]
+len = writer.writeString "héllo"
+console.log len, buf # 6, [0x68, 0xc3, 0xa9, 0x6c, 0x6c, 0x6f, 0x00, 0x00]
 ```
 
 ## Common Functionality

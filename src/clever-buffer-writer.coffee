@@ -64,12 +64,15 @@ class CleverBufferWriter extends CleverBuffer
   writeString: (value, options={}) ->
     offsetSpecified = options.offset?
     { length, offset, encoding } = defaults options,
-      length: value.length
+      length: null
       offset: @offset
       encoding: 'utf-8'
-    return if length is 0
-    @buffer.write value, offset, length, encoding
+    if length?
+      length = @buffer.write value, offset, length, encoding
+    else
+      length = @buffer.write value, offset, encoding
     @offset += length if not offsetSpecified
+    length
 
   writeBytes: (value, options = {}) ->
     offsetSpecified = options.offset?
