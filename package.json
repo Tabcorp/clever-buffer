@@ -23,7 +23,7 @@
   "devDependencies": {
     "cli-table": "^0.3.1",
     "coffee-script": "~1.11.0",
-    "mocha": "~3.0.2",
+    "mocha": "~3.1.1",
     "should": "~11.1.0"
   }
 }
