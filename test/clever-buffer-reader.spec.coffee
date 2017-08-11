@@ -1,6 +1,5 @@
 should             = require 'should'
 CleverBufferReader = require "#{SRC}/clever-buffer-reader"
-require './object-assign-polyfill'
 
 # cartesianProduct takes an object of arrays and creates an array of objects
 # with every combination of values from each array.
