@@ -1,27 +1,6 @@
 should             = require 'should'
 CleverBufferReader = require "#{SRC}/clever-buffer-reader"
-
-# cartesianProduct takes an object of arrays and creates an array of objects
-# with every combination of values from each array.
-# example:
-# cartesianProduct({ a: [1,2,3], b: [false, true] })
-# -> [ { a: 1, b: false },
-#      { a: 1, b: true  },
-#      { a: 2, b: false },
-#      { a: 2, b: true  },
-#      { a: 3, b: false },
-#      { a: 3, b: true  } ]
-cartesianProduct = (arg) ->
-  acc = [{}]
-  for own key, xs of arg
-    acc_ = []
-    for a in acc
-      for x in xs
-        r = Object.assign {}, a
-        r[key] = x
-        acc_.push r
-    acc = acc_
-  acc
+specHelper         = require './spec-helper'
 
 describe 'CleverBufferReader', ->
 
@@ -179,13 +158,13 @@ describe 'CleverBufferReader', ->
     should.equal(cleverBuffer.getUInt8(), 1)
     should.equal(typeof cleverBuffer.getUInt8(), 'undefined')
 
-  testCases =
+  testCases = specHelper.cartesianProduct
     size:      [1, 2, 4, 8]
     unsigned:  [false, true]
     bigEndian: [false, true]
     offset:    [undefined, 20]
 
-  for testCase in (cartesianProduct testCases)
+  for testCase in testCases
     do ({size, unsigned, bigEndian, offset} = testCase) ->
       it "should throw RangeError when reading past the length for #{JSON.stringify testCase}", ->
         buf = new Buffer (offset ? 0) + size - 1
@@ -197,7 +176,7 @@ describe 'CleverBufferReader', ->
         f = if unsigned then "getUInt#{size*8}" else "getInt#{size*8}"
         (-> cleverBuffer[f](offset)).should.throw RangeError
 
-  for testCase in (cartesianProduct testCases)
+  for testCase in testCases
     do ({size, unsigned, bigEndian, offset} = testCase) ->
       it "should not throw RangeError when reading up to the length for #{JSON.stringify testCase}", ->
         buf = new Buffer (offset ? 0) + size
