@@ -1,7 +1,8 @@
-should                  = require 'should'
+should                   = require 'should'
 CleverBufferWriter       = require "#{SRC}/clever-buffer-writer"
 { writeToStupidBuffer,
   writeToCleverBuffer }  = require './support/test-helper'
+specHelper               = require './spec-helper'
 
 describe 'CleverBuffer', ->
 
@@ -350,3 +351,33 @@ describe 'CleverBuffer', ->
     cleverBuffer = new CleverBufferWriter buf, {noAssert: false}
     cleverBuffer.writeUInt8(1)
     (-> cleverBuffer.writeUInt8(1)).should.throw()
+
+  testCases = specHelper.cartesianProduct
+    size:      [1, 2, 4, 8]
+    unsigned:  [false]
+    bigEndian: [false, true]
+
+  for testCase in testCases
+    do ({size, unsigned, bigEndian} = testCase) ->
+      it "should correctly handle leading zero for #{JSON.stringify testCase}", ->
+        buf1 = new Buffer size
+        buf2 = new Buffer size
+
+        cleverBuffer1 = new CleverBufferWriter buf1,
+          bigEndian: bigEndian
+          noAssert: false
+
+        cleverBuffer2 = new CleverBufferWriter buf2,
+          bigEndian: bigEndian
+          noAssert: false
+
+        if unsigned
+          f = "writeUInt#{size*8}"
+          cleverBuffer1[f] "123"
+          cleverBuffer2[f] "00123"
+        else
+          f = "writeInt#{size*8}"
+          cleverBuffer1[f] "-123"
+          cleverBuffer2[f] "-00123"
+
+        buf1.should.eql buf2
