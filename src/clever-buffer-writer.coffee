@@ -49,6 +49,10 @@ class CleverBufferWriter extends CleverBuffer
     offset = _offset ? @offset
     # ref treats leading zeros as denoting octal numbers, so we want to strip
     # them out to prevent this behaviour
+    if typeof value is 'number'
+      value = value.toString()
+    if not @noAssert and not /^\d+$/.test value
+      throw new TypeError '"value" argument is out of bounds'
     value = value.replace /^0+(\d)/, '$1'
     if @bigEndian
       ref.writeUInt64BE(@buffer, offset, value)
@@ -58,6 +62,10 @@ class CleverBufferWriter extends CleverBuffer
 
   writeInt64: (value, _offset) ->
     offset = _offset ? @offset
+    if typeof value is 'number'
+      value = value.toString()
+    if not @noAssert and not /^-?\d+$/.test value
+      throw new TypeError '"value" argument is out of bounds'
     # ref treats leading zeros as denoting octal numbers, so we want to strip
     # them out to prevent this behaviour.
     # Also, ref treats '-0123' as a negative octal
