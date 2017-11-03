@@ -13,7 +13,7 @@
   },
   "main": "target/clever-buffer.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha",
+    "test": "mocha",
     "compile": "coffee --output target --compile src",
     "prepublish": "npm test && npm run compile"
   },
