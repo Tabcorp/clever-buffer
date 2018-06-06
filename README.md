@@ -2,11 +2,11 @@
 
 
 [![NPM](http://img.shields.io/npm/v/clever-buffer.svg?style=flat)](https://npmjs.org/package/clever-buffer)
-[![License](http://img.shields.io/npm/l/clever-buffer.svg?style=flat)](https://github.com/TabDigital/clever-buffer)
+[![License](http://img.shields.io/npm/l/clever-buffer.svg?style=flat)](https://github.com/Tabcorp/clever-buffer)
 
-[![Build Status](http://img.shields.io/travis/TabDigital/clever-buffer.svg?style=flat)](http://travis-ci.org/TabDigital/clever-buffer)
-[![Dependencies](http://img.shields.io/david/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
-[![Dev dependencies](http://img.shields.io/david/dev/TabDigital/clever-buffer.svg?style=flat)](https://david-dm.org/TabDigital/clever-buffer)
+[![Build Status](http://img.shields.io/travis/Tabcorp/clever-buffer.svg?style=flat)](http://travis-ci.org/Tabcorp/clever-buffer)
+[![Dependencies](http://img.shields.io/david/Tabcorp/clever-buffer.svg?style=flat)](https://david-dm.org/Tabcorp/clever-buffer)
+[![Dev dependencies](http://img.shields.io/david/dev/Tabcorp/clever-buffer.svg?style=flat)](https://david-dm.org/Tabcorp/clever-buffer)
 
 Buffer write and read utilities.
 

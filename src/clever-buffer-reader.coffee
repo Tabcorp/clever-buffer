@@ -46,6 +46,8 @@ class CleverBufferReader extends CleverBuffer
 
   getUInt64: (_offset) =>
     offset = _offset ? @offset
+    if not @noAssert and @buffer.length - offset < 8
+      throw new RangeError 'Index out of range'
     if @bigEndian
       val = ref.readUInt64BE(@buffer, offset)
     else
@@ -55,6 +57,8 @@ class CleverBufferReader extends CleverBuffer
 
   getInt64: (_offset) =>
     offset = _offset ? @offset
+    if not @noAssert and @buffer.length - offset < 8
+      throw new RangeError 'Index out of range'
     if @bigEndian
       val = ref.readInt64BE(@buffer, offset)
     else
