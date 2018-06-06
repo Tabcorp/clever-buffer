@@ -1,5 +1,6 @@
-should              = require 'should'
-CleverBufferReader   = require "#{SRC}/clever-buffer-reader"
+should             = require 'should'
+CleverBufferReader = require "#{SRC}/clever-buffer-reader"
+specHelper         = require './spec-helper'
 
 describe 'CleverBufferReader', ->
 
@@ -157,8 +158,32 @@ describe 'CleverBufferReader', ->
     should.equal(cleverBuffer.getUInt8(), 1)
     should.equal(typeof cleverBuffer.getUInt8(), 'undefined')
 
-  it 'throws an exception when reading past the length with noAssert off', ->
-    buf = new Buffer [0x1]
-    cleverBuffer = new CleverBufferReader buf, {noAssert: false}
-    should.equal(cleverBuffer.getUInt8(), 1)
-    (-> cleverBuffer.getUInt8()).should.throw()
+  testCases = specHelper.cartesianProduct
+    size:      [1, 2, 4, 8]
+    unsigned:  [false, true]
+    bigEndian: [false, true]
+    offset:    [undefined, 20]
+
+  for testCase in testCases
+    do ({size, unsigned, bigEndian, offset} = testCase) ->
+      it "should throw RangeError when reading past the length for #{JSON.stringify testCase}", ->
+        buf = new Buffer (offset ? 0) + size - 1
+
+        cleverBuffer = new CleverBufferReader buf,
+          bigEndian: bigEndian
+          noAssert: false
+
+        f = if unsigned then "getUInt#{size*8}" else "getInt#{size*8}"
+        (-> cleverBuffer[f](offset)).should.throw RangeError
+
+  for testCase in testCases
+    do ({size, unsigned, bigEndian, offset} = testCase) ->
+      it "should not throw RangeError when reading up to the length for #{JSON.stringify testCase}", ->
+        buf = new Buffer (offset ? 0) + size
+
+        cleverBuffer = new CleverBufferReader buf,
+          bigEndian: bigEndian
+          noAssert: false
+
+        f = if unsigned then "getUInt#{size*8}" else "getInt#{size*8}"
+        (-> cleverBuffer[f](offset)).should.not.throw()

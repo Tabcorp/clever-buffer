@@ -1,9 +1,10 @@
-should                  = require 'should'
+should                   = require 'should'
 CleverBufferWriter       = require "#{SRC}/clever-buffer-writer"
 { writeToStupidBuffer,
   writeToCleverBuffer }  = require './support/test-helper'
+specHelper               = require './spec-helper'
 
-describe 'CleverBuffer', ->
+describe 'CleverBufferWriter', ->
 
   NUMBER_OF_ITERATIONS = 16
 
@@ -303,7 +304,7 @@ describe 'CleverBuffer', ->
     buf = new Buffer 8
     buf.fill 0
     cleverBuffer = new CleverBufferWriter buf
-    cleverBuffer.writeUInt64('-1')
+    cleverBuffer.writeInt64('-1')
     cleverBuffer.getBuffer().should.eql new Buffer [
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
     ]
@@ -312,7 +313,7 @@ describe 'CleverBuffer', ->
     buf = new Buffer 8
     buf.fill 0
     cleverBuffer = new CleverBufferWriter buf, {bigEndian:true}
-    cleverBuffer.writeUInt64('-1')
+    cleverBuffer.writeInt64('-1')
     cleverBuffer.getBuffer().should.eql new Buffer [
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
     ]
@@ -350,3 +351,84 @@ describe 'CleverBuffer', ->
     cleverBuffer = new CleverBufferWriter buf, {noAssert: false}
     cleverBuffer.writeUInt8(1)
     (-> cleverBuffer.writeUInt8(1)).should.throw()
+
+  describe 'leading zeros are handling correctly', ->
+    for testCase in specHelper.cartesianProduct {
+      size:      [1, 2, 4, 8]
+      unsigned:  [false, true]
+      bigEndian: [false, true]
+    }
+      do ({size, unsigned, bigEndian} = testCase) ->
+        it "should correctly handle leading zero for #{JSON.stringify testCase}", ->
+          buf1 = new Buffer size
+          buf2 = new Buffer size
+
+          cleverBuffer1 = new CleverBufferWriter buf1,
+            bigEndian: bigEndian
+            noAssert: false
+
+          cleverBuffer2 = new CleverBufferWriter buf2,
+            bigEndian: bigEndian
+            noAssert: false
+
+          if unsigned
+            f = "writeUInt#{size*8}"
+            cleverBuffer1[f] "123"
+            cleverBuffer2[f] "00123"
+          else
+            f = "writeInt#{size*8}"
+            cleverBuffer1[f] "-123"
+            cleverBuffer2[f] "-00123"
+
+          buf1.should.eql buf2
+
+  describe 'check we handle numbers and strings identically', ->
+    for testCase in specHelper.cartesianProduct {
+      size:      [1, 2, 4, 8]
+      unsigned:  [false, true]
+      bigEndian: [false, true]
+    }
+      do ({size, unsigned, bigEndian} = testCase) ->
+        it "should correctly handle numbers and strings for #{JSON.stringify testCase}", ->
+          buf1 = new Buffer size
+          buf2 = new Buffer size
+
+          cleverBuffer1 = new CleverBufferWriter buf1,
+            bigEndian: bigEndian
+            noAssert: false
+
+          cleverBuffer2 = new CleverBufferWriter buf2,
+            bigEndian: bigEndian
+            noAssert: false
+
+          if unsigned
+            f = "writeUInt#{size*8}"
+            cleverBuffer1[f] "123"
+            cleverBuffer2[f] 123
+          else
+            f = "writeInt#{size*8}"
+            cleverBuffer1[f] "-123"
+            cleverBuffer2[f] -123
+
+          buf1.should.eql buf2
+
+  describe 'check only throwing exception for writing negative unsigned integers when noAssert:false', ->
+    for testCase in specHelper.cartesianProduct {
+      size:      [1, 2, 4, 8]
+      bigEndian: [false, true]
+    }
+      do ({size, bigEndian} = testCase) ->
+        it "should throw for noAssert:false #{JSON.stringify testCase}", ->
+          cleverBuffer = new CleverBufferWriter (new Buffer size),
+            bigEndian: bigEndian
+            noAssert: false
+          (-> cleverBuffer["writeUInt#{size*8}"]("-1")).should.throw(TypeError)
+          (-> cleverBuffer["writeUInt#{size*8}"](-1)).should.throw(TypeError)
+
+        it "should not throw for noAssert:true #{JSON.stringify testCase}", ->
+          buf = new Buffer size
+          cleverBuffer = new CleverBufferWriter buf,
+            bigEndian: bigEndian
+            noAssert: true
+          (-> cleverBuffer["writeUInt#{size*8}"]("-1")).should.not.throw()
+          (-> cleverBuffer["writeUInt#{size*8}"](-1)).should.not.throw()
