@@ -92,7 +92,7 @@ class CleverBufferWriter extends CleverBuffer
   writeBytes: (value, options = {}) ->
     offsetSpecified = options.offset?
     offset = options.offset or @offset
-    new Buffer(value).copy(@buffer, offset)
+    Buffer.from(value).copy(@buffer, offset)
     @offset += value.length unless offsetSpecified
 
 module.exports = CleverBufferWriter

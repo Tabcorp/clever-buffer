@@ -17,13 +17,13 @@
     "compile": "coffee --output target --compile src",
     "prepublish": "npm test && npm run compile"
   },
-  "//": "there is a known issue with ref:1.3.5 and certain versions of node",
   "dependencies": {
-    "ref": "1.3.4"
+    "ref": "1.3.5"
   },
   "devDependencies": {
     "cli-table": "^0.3.1",
     "coffee-script": "~1.12.6",
+    "lodash": "^4.17.11",
     "mocha": "~5.2.0",
     "should": "~13.2.1"
   }

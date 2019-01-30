@@ -4,7 +4,7 @@ specHelper         = require './spec-helper'
 
 describe 'CleverBufferReader', ->
 
-  buf = new Buffer [
+  buf = Buffer.from [
       0x45,0x58,0x50,0x45,0x43,0x54,0x45,0x44,0x20,0x52,0x45,0x54,0x55,0x52,0x4e,0x21,
       0x52,0x45,0x54,0x55,0x52,0x4e,0x20,0x4f,0x46,0x20,0x24,0x32,0x2e,0x30,0x30,0x21
   ]
@@ -15,7 +15,7 @@ describe 'CleverBufferReader', ->
       cleverBuffer.getUInt8().should.eql buf.readUInt8 i, true
 
   it 'should get int8', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0...Math.pow(2,8)]
+    cleverBuffer = new CleverBufferReader Buffer.from [0...Math.pow(2,8)]
     for i in [0..(buf.size - 1)]
       cleverBuffer.getInt8().should.eql buf.readInt8 i, true
 
@@ -30,12 +30,12 @@ describe 'CleverBufferReader', ->
       cleverBuffer.getUInt16().should.eql buf.readUInt16BE i, true
 
   it 'should get int16 Little Endian', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0...Math.pow(2,16)]
+    cleverBuffer = new CleverBufferReader Buffer.from [0...Math.pow(2,16)]
     for i in [0..(buf.size/2 - 1)]
       cleverBuffer.getInt16().should.eql buf.readInt16LE i, true
 
   it 'should get int16 Big Endian', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0...Math.pow(2,16)], { bigEndian:true }
+    cleverBuffer = new CleverBufferReader (Buffer.from [0...Math.pow(2,16)]), { bigEndian:true }
     for i in [0..(buf.size/2 - 1)]
       cleverBuffer.getInt16().should.eql buf.readInt16BE i, true
 
@@ -50,37 +50,37 @@ describe 'CleverBufferReader', ->
       cleverBuffer.getUInt32().should.eql buf.readUInt32BE i, true
 
   it 'should get int32 Little Endian', ->
-    mybuf = new Buffer [0x88, 0x88, 0xA0, 0xFF]
+    mybuf = Buffer.from [0x88, 0x88, 0xA0, 0xFF]
     cleverBuffer = new CleverBufferReader mybuf
     cleverBuffer.getInt32().should.eql (cleverBuffer.getBuffer().readInt32LE 0, true)
 
   it 'should get int32 Big Endian', ->
-    mybuf = new Buffer [0x88, 0x88, 0xA0, 0xFF]
+    mybuf = Buffer.from [0x88, 0x88, 0xA0, 0xFF]
     cleverBuffer = new CleverBufferReader mybuf, { bigEndian:true }
     cleverBuffer.getInt32().should.eql (cleverBuffer.getBuffer().readInt32BE 0, true)
 
   it 'should get Uint64 little endian MAX', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+    cleverBuffer = new CleverBufferReader Buffer.from [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
     cleverBuffer.getUInt64().should.eql '18446744073709551615'
 
   it 'should get Uint64 big endian MAX', ->
-    cleverBuffer = new CleverBufferReader (new Buffer [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]), { bigEndian:true }
+    cleverBuffer = new CleverBufferReader (Buffer.from [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]), { bigEndian:true }
     cleverBuffer.getUInt64().should.eql '18446744073709551615'
 
   it 'should get Uint64 little endian', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0x46, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]
+    cleverBuffer = new CleverBufferReader Buffer.from [0x46, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00]
     cleverBuffer.getUInt64().should.eql '4294967366'
 
   it 'should get Uint64 big endian', ->
-    cleverBuffer = new CleverBufferReader (new Buffer [0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x46]), { bigEndian:true }
+    cleverBuffer = new CleverBufferReader (Buffer.from [0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x46]), { bigEndian:true }
     cleverBuffer.getUInt64().should.eql '4294967366'
 
   it 'should get int64 little endian', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+    cleverBuffer = new CleverBufferReader Buffer.from [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
     cleverBuffer.getInt64().should.eql '-1'
 
   it 'should get int64 big endian', ->
-    cleverBuffer = new CleverBufferReader new Buffer ([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]), { bigEndian:true }
+    cleverBuffer = new CleverBufferReader Buffer.from ([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]), { bigEndian:true }
     cleverBuffer.getInt64().should.eql '-1'
 
   it 'should get String', ->
@@ -118,26 +118,26 @@ describe 'CleverBufferReader', ->
     cleverBuffer.getOffset().should.eql 6
 
   it 'should be able to readUInt8 at a specific offset', ->
-    cleverBuffer = new CleverBufferReader new Buffer [
+    cleverBuffer = new CleverBufferReader Buffer.from [
       0x01, 0x02, 0x03, 0x04, 0x05
     ]
     cleverBuffer.getUInt8(3).should.eql 4
     cleverBuffer.getOffset().should.eql 0 #should not increment currentOffset
 
   it 'should be able to readUInt16 at a specific offset', ->
-    cleverBuffer = new CleverBufferReader new Buffer [
+    cleverBuffer = new CleverBufferReader Buffer.from [
       0x01, 0x02, 0x03, 0x00, 0x05
     ]
     cleverBuffer.getUInt16(2).should.eql 3
     cleverBuffer.getOffset().should.eql 0 #should not increment currentOffset
 
   it 'should get Uint64 at a specific offset', ->
-    cleverBuffer = new CleverBufferReader new Buffer [0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+    cleverBuffer = new CleverBufferReader Buffer.from [0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
     cleverBuffer.getUInt64(2).should.eql '18446744073709551615'
     cleverBuffer.getOffset().should.eql 0 #should not increment currentOffset
 
   it 'should get string of specified length at a specified offset', ->
-    cleverBuffer = new CleverBufferReader new Buffer [
+    cleverBuffer = new CleverBufferReader Buffer.from [
       0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x45, 0x4C, 0x4C, 0x4F
     ]
     cleverBuffer.getString({length:5,offset: 5}).should.eql 'HELLO'
@@ -145,7 +145,7 @@ describe 'CleverBufferReader', ->
     cleverBuffer.getOffset().should.eql 0 #should not increment currentOffset
 
   it 'should get bytes', ->
-    cleverBuffer = new CleverBufferReader new Buffer [
+    cleverBuffer = new CleverBufferReader Buffer.from [
       0x20, 0x6d, 0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20
     ]
     cleverBuffer.getBytes(offset: 2, length: 9).should.eql [0x57, 0x68, 0x61, 0x74, 0x72, 0x72, 0x79, 0x21, 0x20]
@@ -153,7 +153,7 @@ describe 'CleverBufferReader', ->
     cleverBuffer.getBytes(length: 1).should.eql [0x61]
 
   it 'should return <undefined> when reading past the length', ->
-    buf = new Buffer [0x1]
+    buf = Buffer.from [0x1]
     cleverBuffer = new CleverBufferReader buf
     should.equal(cleverBuffer.getUInt8(), 1)
     should.equal(typeof cleverBuffer.getUInt8(), 'undefined')
@@ -167,7 +167,7 @@ describe 'CleverBufferReader', ->
   for testCase in testCases
     do ({size, unsigned, bigEndian, offset} = testCase) ->
       it "should throw RangeError when reading past the length for #{JSON.stringify testCase}", ->
-        buf = new Buffer (offset ? 0) + size - 1
+        buf = Buffer.alloc (offset ? 0) + size - 1
 
         cleverBuffer = new CleverBufferReader buf,
           bigEndian: bigEndian
@@ -179,7 +179,7 @@ describe 'CleverBufferReader', ->
   for testCase in testCases
     do ({size, unsigned, bigEndian, offset} = testCase) ->
       it "should not throw RangeError when reading up to the length for #{JSON.stringify testCase}", ->
-        buf = new Buffer (offset ? 0) + size
+        buf = Buffer.alloc (offset ? 0) + size
 
         cleverBuffer = new CleverBufferReader buf,
           bigEndian: bigEndian
