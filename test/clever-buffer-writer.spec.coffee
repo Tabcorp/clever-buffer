@@ -366,7 +366,7 @@ describe 'CleverBufferWriter', ->
 
   it 'does nothing silently when writing past the length', ->
     buf = Buffer.from [0x0]
-    cleverBuffer = new CleverBufferWriter buf
+    cleverBuffer = new CleverBufferWriter buf, {noAssert: true}
     cleverBuffer.writeUInt8(1)
     cleverBuffer.writeUInt8(1)
     buf.should.eql Buffer.from [0x1]
