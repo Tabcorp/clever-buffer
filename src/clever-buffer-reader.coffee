@@ -2,46 +2,133 @@ ref             = require 'ref'
 defaults        = require './defaults'
 CleverBuffer    = require './clever-buffer-common'
 
-UINT32MAX_PLUS_ONE    = 4294967296
-
+checkOffset = (offset, ext, length) ->
+  if (offset + ext > length)
+    throw new RangeError('Index out of range');
 
 class CleverBufferReader extends CleverBuffer
 
   constructor: (buffer, options={}) ->
     super buffer, options
 
+# START NODE 8 LEGACY BUFFER FUNCTIONS
+# Copyright Joyent, Inc. and other Node contributors.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the
+# following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+# NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+# USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+  legacyReadUInt8: (offset, noAssert) ->
+    offset = offset >>> 0
+    if !noAssert
+      checkOffset offset, 1, @buffer.length
+    @buffer[offset]
+
+  legacyReadInt8: (offset, noAssert) ->
+    offset = offset >>> 0
+    if !noAssert
+      checkOffset offset, 1, @buffer.length
+    val = @buffer[offset]
+    if !(val & 0x80) then val else (0xff - val + 1) * -1
+
+  legacyReadUInt16LE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if !noAssert
+      checkOffset offset, 2, @buffer.length
+    @buffer[offset] | @buffer[offset + 1] << 8
+
+  legacyReadUInt16BE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if !noAssert
+      checkOffset offset, 2, @buffer.length
+    @buffer[offset] << 8 | @buffer[offset + 1]
+
+  legacyReadInt16LE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if !noAssert
+      checkOffset offset, 2, @buffer.length
+    val = @buffer[offset] | @buffer[offset + 1] << 8
+    if val & 0x8000 then val | 0xFFFF0000 else val
+
+  legacyReadInt16BE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if (!noAssert)
+      checkOffset(offset, 2, @buffer.length)
+    val = @buffer[offset + 1] | @buffer[offset] << 8
+    if val & 0x8000 then val | 0xFFFF0000 else val
+
+  legacyReadUInt32LE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if (!noAssert)
+      checkOffset(offset, 4, @buffer.length);
+    (@buffer[offset] | @buffer[offset + 1] << 8 | @buffer[offset + 2] << 16) + @buffer[offset + 3] * 0x1000000
+
+  legacyReadUInt32BE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if (!noAssert)
+      checkOffset(offset, 4, @buffer.length)
+    @buffer[offset] * 0x1000000 + (@buffer[offset + 1] << 16 | @buffer[offset + 2] << 8 | @buffer[offset + 3])
+
+  legacyReadInt32LE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if (!noAssert)
+      checkOffset(offset, 4, @buffer.length)
+    @buffer[offset] | @buffer[offset + 1] << 8 | @buffer[offset + 2] << 16 | @buffer[offset + 3] << 24
+
+  legacyReadInt32BE: (offset, noAssert) ->
+    offset = offset >>> 0
+    if (!noAssert)
+      checkOffset(offset, 4, @buffer.length)
+    @buffer[offset] << 24 | @buffer[offset + 1] << 16 | @buffer[offset + 2] << 8 | @buffer[offset + 3]
+# END NODE 8 LEGACY BUFFER FUNCTIONS
+
   getUInt8: (_offset) =>
-    @buffer.readUInt8 _offset ? @offset++, @noAssert
+    @legacyReadUInt8 _offset ? @offset++, @noAssert
 
   getInt8: (_offset) =>
-    @buffer.readInt8 _offset ? @offset++, @noAssert
+    @legacyReadInt8 _offset ? @offset++, @noAssert
 
   getUInt16: (_offset) =>
     bigFunction = (offset, noAssert) =>
-      @buffer.readUInt16BE offset, noAssert
+      @legacyReadUInt16BE offset, noAssert
     littleFunction = (offset, noAssert) =>
-      @buffer.readUInt16LE offset, noAssert
+      @legacyReadUInt16LE offset, noAssert
     @_executeAndIncrement bigFunction, littleFunction, 2, _offset
 
   getInt16: (_offset) =>
     bigFunction = (offset, noAssert) =>
-      @buffer.readInt16BE offset, noAssert
+      @legacyReadInt16BE offset, noAssert
     littleFunction = (offset, noAssert) =>
-      @buffer.readInt16LE offset, noAssert
+      @legacyReadInt16LE offset, noAssert
     @_executeAndIncrement bigFunction, littleFunction, 2, _offset
 
   getUInt32: (_offset) =>
     bigFunction = (offset, noAssert) =>
-      @buffer.readUInt32BE offset, noAssert
+      @legacyReadUInt32BE offset, noAssert
     littleFunction = (offset, noAssert) =>
-      @buffer.readUInt32LE offset, noAssert
+      @legacyReadUInt32LE offset, noAssert
     @_executeAndIncrement bigFunction, littleFunction, 4, _offset
 
   getInt32: (_offset) =>
     bigFunction = (offset, noAssert) =>
-      @buffer.readInt32BE offset, noAssert
+      @legacyReadInt32BE offset, noAssert
     littleFunction = (offset, noAssert) =>
-      @buffer.readInt32LE offset, noAssert
+      @legacyReadInt32LE offset, noAssert
     @_executeAndIncrement bigFunction, littleFunction, 4, _offset
 
   getUInt64: (_offset) =>
