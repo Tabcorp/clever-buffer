@@ -20,13 +20,7 @@ const checkOffset = function(offset, ext, length) {
 class CleverBufferReader extends CleverBuffer {
 
   constructor(buffer, options) {
-    {
-      // Hack: trick Babel/TypeScript into allowing this before super.
-      if (false) { super(); }
-      let thisFn = (() => { return this; }).toString();
-      let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
-      eval(`${thisName} = this;`);
-    }
+    super(buffer, options);
     this.getUInt8 = this.getUInt8.bind(this);
     this.getInt8 = this.getInt8.bind(this);
     this.getUInt16 = this.getUInt16.bind(this);
@@ -38,7 +32,6 @@ class CleverBufferReader extends CleverBuffer {
     this.getString = this.getString.bind(this);
     this.getBytes = this.getBytes.bind(this);
     if (options == null) { options = {}; }
-    super(buffer, options);
   }
 
 // START NODE 8 LEGACY BUFFER FUNCTIONS
