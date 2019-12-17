@@ -1,18 +1,28 @@
-CleverBufferWriter       = require "#{SRC}/clever-buffer-writer"
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const CleverBufferWriter       = require(`${SRC}/clever-buffer-writer`);
 
-exports.writeToStupidBuffer = (values, numberOfBytesPerWord, writeFunction) ->
-  buf = Buffer.alloc values.length*numberOfBytesPerWord
+exports.writeToStupidBuffer = function(values, numberOfBytesPerWord, writeFunction) {
+  const buf = Buffer.alloc(values.length*numberOfBytesPerWord);
 
-  offset = 0
-  for val in values
-    writeFunction buf, val, offset
-    offset += numberOfBytesPerWord
-  buf
+  let offset = 0;
+  for (let val of Array.from(values)) {
+    writeFunction(buf, val, offset);
+    offset += numberOfBytesPerWord;
+  }
+  return buf;
+};
 
-exports.writeToCleverBuffer = (values, numberOfBytesPerWord, bigEndian, writeFunction) ->
-  cleverBufferWriter = new CleverBufferWriter Buffer.alloc(values.length*numberOfBytesPerWord), {bigEndian:bigEndian}
+exports.writeToCleverBuffer = function(values, numberOfBytesPerWord, bigEndian, writeFunction) {
+  const cleverBufferWriter = new CleverBufferWriter(Buffer.alloc(values.length*numberOfBytesPerWord), {bigEndian});
 
-  for val in values
-    writeFunction cleverBufferWriter, val
+  for (let val of Array.from(values)) {
+    writeFunction(cleverBufferWriter, val);
+  }
 
-  cleverBufferWriter.getBuffer()
+  return cleverBufferWriter.getBuffer();
+};
