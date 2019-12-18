@@ -1,4 +1,5 @@
-const ref             = require('ref');
+const ref             = require('ref-napi');
+
 const defaults        = require('./defaults');
 const CleverBuffer    = require('./clever-buffer-common');
 
