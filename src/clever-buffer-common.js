@@ -1,16 +1,8 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const defaults = require('./defaults');
 
 class CleverBuffer {
 
-  constructor(buffer, options) {
+  constructor(buffer, options = {}) {
 
     this._executeAndIncrement = this._executeAndIncrement.bind(this);
     this.getBuffer = this.getBuffer.bind(this);
@@ -19,7 +11,6 @@ class CleverBuffer {
     this.skipTo = this.skipTo.bind(this);
     this.trim = this.trim.bind(this);
     this.slice = this.slice.bind(this);
-    if (options == null) { options = {}; }
     this.buffer = buffer;
 
     ({ offset: this.offset, noAssert: this.noAssert, bigEndian: this.bigEndian } = defaults(options, {
@@ -34,7 +25,7 @@ class CleverBuffer {
     let val;
     if (this.bigEndian) {
       val = bigEndianFunction(_offset != null ? _offset : this.offset, this.noAssert);
-    } else {
+    } else {      
       val = littleEndianFunction(_offset != null ? _offset : this.offset, this.noAssert);
     }
     if (_offset === undefined) { this.offset += value; }
@@ -54,7 +45,7 @@ class CleverBuffer {
   }
 
   skipTo(offset) {
-    return this.offset = offset;
+    this.offset = offset;
   }
 
   trim() {

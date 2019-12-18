@@ -1,17 +1,8 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS001: Remove Babel/TypeScript constructor workaround
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const ref             = require('ref');
 const defaults        = require('./defaults');
 const CleverBuffer    = require('./clever-buffer-common');
 
-const checkOffset = function(offset, ext, length) {
+const checkOffset = (offset, ext, length) => {
   if ((offset + ext) > length) {
     throw new RangeError('Index out of range');
   }
@@ -141,11 +132,11 @@ class CleverBufferReader extends CleverBuffer {
 // END NODE 8 LEGACY BUFFER FUNCTIONS
 
   getUInt8(_offset) {
-    return this.legacyReadUInt8(_offset != null ? _offset : this.offset++, this.noAssert);
+    return this.legacyReadUInt8(_offset || this.offset++, this.noAssert);
   }
 
   getInt8(_offset) {
-    return this.legacyReadInt8(_offset != null ? _offset : this.offset++, this.noAssert);
+    return this.legacyReadInt8(_offset || this.offset++, this.noAssert);
   }
 
   getUInt16(_offset) {
@@ -190,7 +181,7 @@ class CleverBufferReader extends CleverBuffer {
 
   getUInt64(_offset) {
     let val;
-    const offset = _offset != null ? _offset : this.offset;
+    const offset = _offset || this.offset;
     if (!this.noAssert && ((this.buffer.length - offset) < 8)) {
       throw new RangeError('Index out of range');
     }
@@ -205,7 +196,7 @@ class CleverBufferReader extends CleverBuffer {
 
   getInt64(_offset) {
     let val;
-    const offset = _offset != null ? _offset : this.offset;
+    const offset = _offset || this.offset;
     if (!this.noAssert && ((this.buffer.length - offset) < 8)) {
       throw new RangeError('Index out of range');
     }
@@ -218,8 +209,7 @@ class CleverBufferReader extends CleverBuffer {
     return val.toString();
   }
 
-  getString(options) {
-    if (options == null) { options = {}; }
+  getString(options = {}) {
     const offsetSpecified = (options.offset != null);
     const { length, offset, encoding } = defaults(options, {
       length: 0,
@@ -233,8 +223,7 @@ class CleverBufferReader extends CleverBuffer {
     return val;
   }
 
-  getBytes(options) {
-    if (options == null) { options = {}; }
+  getBytes(options = {}) {
     const offsetSpecified = (options.offset != null);
     const { length, offset } = defaults(options, {
       length: 0,

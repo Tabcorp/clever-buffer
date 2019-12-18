@@ -1,16 +1,8 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
 const ref             = require('ref');
 const defaults        = require('./defaults');
 const CleverBuffer    = require('./clever-buffer-common');
 
-const checkInt = function(buffer, value, offset, ext, max, min) {
+const checkInt = (buffer, value, offset, ext, max, min) => {
   if ((value > max) || (value < min)) {
     throw new TypeError('"value" argument is out of bounds');
   }
@@ -21,9 +13,7 @@ const checkInt = function(buffer, value, offset, ext, max, min) {
 
 class CleverBufferWriter extends CleverBuffer {
 
-  constructor(buffer, options) {
-
-    if (options == null) { options = {}; }
+  constructor(buffer, options = {}) {
     super(buffer, options);
   }
 
@@ -166,7 +156,6 @@ class CleverBufferWriter extends CleverBuffer {
   }
 // END NODE 8 LEGACY BUFFER FUNCTIONS
 
-
   writeUInt8(value, _offset) {
     return this.legacyWriteUInt8(value, _offset != null ? _offset : this.offset++, this.noAssert);
   }
@@ -254,8 +243,7 @@ class CleverBufferWriter extends CleverBuffer {
     if (_offset === undefined) { return this.offset += 8; }
   }
 
-  writeString(value, options) {
-    if (options == null) { options = {}; }
+  writeString(value, options = {}) {
     const offsetSpecified = (options.offset != null);
     let { length, offset, encoding } = defaults(options, {
       length: null,
@@ -272,10 +260,9 @@ class CleverBufferWriter extends CleverBuffer {
     return length;
   }
 
-  writeBytes(value, options) {
-    if (options == null) { options = {}; }
+  writeBytes(value, options = {}) {
     const offsetSpecified = (options.offset != null);
-    const offset = options.offset || this.offset;
+    const offset = options.offset != null ? options.offset : this.offset;
     Buffer.from(value).copy(this.buffer, offset);
     if (!offsetSpecified) { return this.offset += value.length; }
   }
