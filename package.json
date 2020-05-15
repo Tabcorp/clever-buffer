@@ -17,7 +17,7 @@
     "prepublish": "npm test"
   },
   "dependencies": {
-    "ref-napi": "1.4.3"
+    "ref-napi": "2.0.0"
   },
   "devDependencies": {
     "cli-table": "^0.3.1",
