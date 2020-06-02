@@ -6,7 +6,7 @@
 
 [![Build Status](http://img.shields.io/travis/Tabcorp/clever-buffer.svg?style=flat)](http://travis-ci.org/Tabcorp/clever-buffer)
 [![Dependencies](http://img.shields.io/david/Tabcorp/clever-buffer.svg?style=flat)](https://david-dm.org/Tabcorp/clever-buffer)
-[![Dev dependencies](http://img.shields.io/david/dev/Tabcorp/clever-buffer.svg?style=flat)](https://david-dm.org/Tabcorp/clever-buffer) [![Greenkeeper badge](https://badges.greenkeeper.io/Tabcorp/clever-buffer.svg)](https://greenkeeper.io/)
+[![Dev dependencies](http://img.shields.io/david/dev/Tabcorp/clever-buffer.svg?style=flat)](https://david-dm.org/Tabcorp/clever-buffer)
 
 Buffer write and read utilities.
 
