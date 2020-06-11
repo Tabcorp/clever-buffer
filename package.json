@@ -22,7 +22,7 @@
   "devDependencies": {
     "cli-table": "^0.3.1",
     "lodash": "^4.17.15",
-    "mocha": "~7.2.0",
+    "mocha": "~8.0.1",
     "should": "~13.2.1"
   }
 }
