@@ -1,6 +1,6 @@
 {
   "name": "clever-buffer",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Buffer utilities",
   "author": "Tabcorp Digital Technology Team",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "test": "mocha \"test/**/*.js\"",
     "prepublish": "npm test"
   },
-  "engines" : {
-    "node" : ">=10.0.0"
+  "engines": {
+    "node": ">=10.0.0"
   },
   "dependencies": {
     "ref-napi": "2.0.2"
