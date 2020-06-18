@@ -16,6 +16,9 @@
     "test": "mocha \"test/**/*.js\"",
     "prepublish": "npm test"
   },
+  "engines" : {
+    "node" : ">=10.0.0"
+  },
   "dependencies": {
     "ref-napi": "2.0.2"
   },
